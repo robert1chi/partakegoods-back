@@ -1,0 +1,12 @@
+database:
+  type: ["mysql","redis"]
+  # mongodb:
+  #   - { host: "localhost", port: 27017, username: "test", password: "password" }
+  mysql:
+    - { host: "localhost", port: 3306, username: "root", password: "114514", database: "yarimasune" }
+  redis:
+    - { host: "localhost", port: 6379 }
+global:
+  host: "localhost"
+  protocol: "http"
+  port: 3050

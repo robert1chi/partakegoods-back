@@ -1,0 +1,44 @@
+{
+  "name": "partakegoods-back",
+  "version": "0.1.0",
+  "main": "app.js",
+  "repository": "git@github.com:robert1chi/partakegoods-back.git",
+  "author": "robert1chi <40431036+robert1chi@users.noreply.github.com>",
+  "license": "MPL-2.0",
+  "scripts": {
+    "dev": "nodemon",
+    "build": "rm -rf dist && tsc",
+    "start": "ts-node -r tsconfig-paths/register app.ts --files"
+  },
+  "dependencies": {
+    "@koa/cors": "^3.3.0",
+    "@koa/router": "^12.0.0",
+    "ioredis": "^5.2.3",
+    "js-yaml": "^4.1.0",
+    "jsonwebtoken": "^8.5.1",
+    "koa": "^2.13.4",
+    "koa-body": "^5.0.0",
+    "koa-jsonp": "^2.0.2",
+    "mongodb": "^4.8.1",
+    "mysql2": "^2.3.3",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.3.7",
+    "winston": "^3.8.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.18.10",
+    "@babel/core": "^7.18.10",
+    "@babel/node": "^7.18.10",
+    "@babel/preset-env": "^7.18.10",
+    "@babel/register": "^7.18.9",
+    "@types/js-yaml": "^4.0.5",
+    "@types/jsonwebtoken": "^8.5.8",
+    "@types/koa": "^2.13.5",
+    "@types/koa__cors": "^3.3.0",
+    "@types/koa__router": "^8.0.11",
+    "@types/node": "^18.7.1",
+    "eslint": "^8.21.0",
+    "nodemon": "^2.0.19",
+    "tsconfig-paths": "^4.1.0"
+  }
+}
