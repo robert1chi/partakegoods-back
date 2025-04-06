@@ -163,7 +163,6 @@ export const authToken = async (token: string, id: string): Promise<IAuthToken> 
         .andWhere("token.user_id = :id", { id })
         .getOne()
     if (validToken !== null) {
-        console.log(validToken.blocked)
         if (validToken.blocked === 0) {
             return true
         } else {
