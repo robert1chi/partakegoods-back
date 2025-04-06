@@ -18,4 +18,30 @@ export default class Admin {
             await next()
         }
     }
+    get regesterUser() {
+        return async (ctx: any, next: any) => {
+            type IRegesterUser = {
+                username: string;
+                password: string;
+                role: number;
+            }
+            const regesterBody: IRegesterUser = ctx.request.body
+            const user = await handleDataSource
+                .createQueryBuilder()
+                .insert()
+                .into(UserTable)
+                .values({
+                    username: regesterBody.username,
+                    passwd: regesterBody.password,
+                    role: regesterBody.role
+                })
+                .execute()
+            ctx.body = {
+                code: 0,
+                msg: 'Register success',
+                data: {}
+            }
+            await next()
+        }
+    }
 }

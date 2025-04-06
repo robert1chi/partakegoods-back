@@ -14,6 +14,9 @@ export class UserTable {
     @Column({ select: false })
     passwd: string
 
+    @Column({ select: false })
+    salt: string
+
     @Column({ type: 'int', nullable: false })
     role: number
 
