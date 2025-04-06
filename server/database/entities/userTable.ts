@@ -20,6 +20,6 @@ export class UserTable {
     @Column({ type: 'int', nullable: false })
     role: number
 
-    @Column({ type: 'tinyint', nullable: false })
+    @Column('tinyint', { nullable: false, default: () => 0 })
     available: number
 }

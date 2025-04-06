@@ -47,6 +47,9 @@ router.post("/offline", koaBody(), new Users().userOffline, async (ctx) => {
 router.get("/detail", koaBody(), new Users().userDetail, async (ctx) => {
 
 })
+router.post("/changePassword", koaBody(), new Users().changePassword, async (ctx) => {
+
+})
 const users = routers
 
 export default users;

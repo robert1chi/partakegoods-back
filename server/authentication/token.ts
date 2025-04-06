@@ -3,6 +3,7 @@ import winston from "@/winstonLogger"
 import { handleDataSource } from '../database'
 import { UserTable } from '../database/entities/userTable'
 import { ValidJwt } from '../database/entities/validJwt'
+import HashCrypto from './crypto'
 
 type AcceptMsg = {
     userId: number;
@@ -45,17 +46,33 @@ class Token {
     get authUser() {
         return async (ctx: any, next: any) => {
             const { username, password } = ctx.request.body
-            console.log(ctx.request.body)
+            // console.log(ctx.request.body)
             const accept = async (): Promise<AcceptMsg> => {
                 if (username && password) {
+                    const getUser = await userTableRepository
+                        .createQueryBuilder("user")
+                        .select(["user.id", "user.salt"])
+                        .where("user.username = :username", { username: username })
+                        .cache(3000)
+                        .getOne()
+                    if (!getUser) {
+                        winston.info(`User not found ${username}`)
+                        return {
+                            userId: -1,
+                            accepted: false,
+                            msg: "loginPage.noUser"
+                        }
+                    }
+                    const salt = getUser.salt
+                    const hashedPassword = HashCrypto.hashedPassword(password, salt)
                     const userDetail = await userTableRepository
                         .createQueryBuilder("user")
-                        .where("user.username = :username", { username: username })
-                        .andWhere("user.passwd = :password", { password: password })
+                        .where("user.id = :id", { id: getUser.id })
+                        .andWhere("user.passwd = :password", { password: hashedPassword })
                         .cache(3000)
                         .getOne()
                     if (!userDetail) {
-                        winston.info(`No user found with username: ${username}`)
+                        winston.info(`Password incorrect ${username}`)
                         return {
                             userId: -1,
                             accepted: false,
@@ -124,7 +141,7 @@ class Token {
 }
 export const authToken = async (token: string, id: string): Promise<IAuthToken> => {
     if (!token) return { code: 403, msg: "token.empty" }
-    const jwtAuth: unknown|IAuthToken= jwt.verify(token, 'testSecret', (err, decoded) => {
+    const jwtAuth: unknown | IAuthToken = jwt.verify(token, 'testSecret', (err, decoded) => {
         if (err) {
             winston.warn(err)
             if (err.name === 'TokenExpiredError') {
@@ -144,9 +161,9 @@ export const authToken = async (token: string, id: string): Promise<IAuthToken> 
         .select("token.blocked")
         .where("token.jwt = :token", { token })
         .andWhere("token.user_id = :id", { id })
-        .cache(6000)
         .getOne()
     if (validToken !== null) {
+        console.log(validToken.blocked)
         if (validToken.blocked === 0) {
             return true
         } else {

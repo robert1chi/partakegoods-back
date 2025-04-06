@@ -3,6 +3,7 @@ import { UserTable } from "@/server/database/entities/userTable";
 import { ValidJwt } from "@/server/database/entities/validJwt";
 import winston from "@/winstonLogger";
 import { global } from "@/server/global/config";
+import HashCrypto from "@/server/authentication/crypto";
 
 export default class Users {
     get userLogout() {
@@ -46,6 +47,64 @@ export default class Users {
                 code: 0,
                 data: {
                     ...userDetail
+                }
+            }
+            await next()
+        }
+    }
+    get changePassword() {
+        return async (ctx: any, next: any) => {
+            type IChangePassword = {
+                oldPassword: string;
+                newPassword: string;
+            }
+            const changePasswordBody: IChangePassword = ctx.request.body
+            const userId = ctx.cookies.get("USERID")
+
+            const userSalt = await handleDataSource
+                .createQueryBuilder()
+                .select("user.salt")
+                .from(UserTable, "user")
+                .where("user.id = :id", { id: userId })
+                .getOne()
+            if (!userSalt) {
+                ctx.body = {
+                    code: 0,
+                    msg: 'User not found',
+                    data: {}
+                }
+                await next()
+                return
+            }
+            const hashedOldPassword = HashCrypto.hashedPassword(changePasswordBody.oldPassword, userSalt.salt);
+            const userDetail = await handleDataSource
+                .createQueryBuilder()
+                .select(["user.id"])
+                .from(UserTable, "user")
+                .where("user.id = :id", { id: userId })
+                .andWhere("user.passwd = :passwd", { passwd: hashedOldPassword })
+                .getOne()
+            if (!userDetail) {
+                ctx.body = {
+                    code: 0,
+                    msg: 'Old password is wrong',
+                    data: {}
+                }
+            } else {
+                const { salt, hashedPassword } = HashCrypto.hashPassword(changePasswordBody.newPassword)
+                await handleDataSource
+                    .createQueryBuilder()
+                    .update(UserTable)
+                    .set({
+                        passwd: hashedPassword,
+                        salt: salt
+                    })
+                    .where("id = :id", { id: userId })
+                    .execute()
+                ctx.body = {
+                    code: 0,
+                    msg: 'Change password success',
+                    data: {}
                 }
             }
             await next()

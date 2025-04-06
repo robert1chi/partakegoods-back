@@ -22,28 +22,24 @@ router.post('/forceLogout', koaBody(), new Token(1).authLevel, new Admin().force
         msg: 'Force logout success'
     }
 })
-router.post('/regesterUser', koaBody() , async (ctx) => {
-    type IRegesterUser = {
-        username: string;
-        password: string;
-        role: number;
-    }
-    const regesterBody: IRegesterUser = ctx.request.body
-    const { salt, hashedPassword } = HashCrypto.hashPassword(regesterBody.password)
-    await handleDataSource
-        .createQueryBuilder()
-        .insert()
-        .into(UserTable)
-        .values({
-            username: regesterBody.username,
-            passwd: hashedPassword,
-            salt: salt,
-            role: regesterBody.role
-        })
-        .execute()
+router.post('/registerUser', koaBody(), new Token(1).authLevel, new Admin().regesterUser, async (ctx) => {
     ctx.body = {
         code: 0,
         msg: 'Register success',
+        data: {}
+    }
+})
+router.post('/activeUser', koaBody(), new Token(1).authLevel, new Admin().activeUser, async (ctx) => {
+    ctx.body = {
+        code: 0,
+        msg: 'Active success',
+        data: {}
+    }
+})
+router.post('/disableUser', koaBody(), new Token(1).authLevel, new Admin().disableUser, async (ctx) => {
+    ctx.body = {
+        code: 0,
+        msg: 'Disable success',
         data: {}
     }
 })

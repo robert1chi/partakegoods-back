@@ -22,7 +22,7 @@ const { host, port } = global
 console.log(host, port)
 app.use(cors({
     origin: (ctx) => {
-        const whiteList = ['http://192.168.10.32:3002', 'http://localhost:3002'];
+        const whiteList = ['http://192.168.1.173:3002', 'http://localhost:3002'];
         let url = ctx.header.referer.slice(0, ctx.header.referer.length - 1);
         if (whiteList.includes(url)) {
             return url

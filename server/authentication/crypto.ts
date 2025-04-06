@@ -12,9 +12,9 @@ export default class HashCrypto {
         const hashedPassword = hash.digest('hex');
         return { salt, hashedPassword };
     }
-    static comparePassword(password: string, salt: string, hashedPassword: string): boolean {
+    static hashedPassword(password: string, salt: string): string {
         const hash = createHash('sha256');
         hash.update(password + salt);
-        return hash.digest('hex') === hashedPassword;
+        return hash.digest('hex');
     }
 }
