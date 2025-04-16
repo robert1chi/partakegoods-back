@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm"
+import { UserGroupRole } from "./UserGroupRole";
 
 @Entity()
 export class UserTable {
@@ -11,6 +12,9 @@ export class UserTable {
     @Column()
     username: string
 
+    @Column({ type: 'varchar', length: 255 })
+    email: string
+
     @Column({ select: false })
     passwd: string
 
@@ -20,6 +24,12 @@ export class UserTable {
     @Column({ type: 'int', nullable: false })
     role: number
 
+    @Column({ type: 'bigint' })
+    group_id: number
+
     @Column('tinyint', { nullable: false, default: () => 0 })
     available: number
+
+    @ManyToOne(()=> UserGroupRole, ugr=>ugr.user)
+    group_roles: UserGroupRole[]
 }

@@ -5,6 +5,7 @@ import Token, { authToken } from './server/authentication/token'
 import winston from 'winstonLogger'
 import { handleDataSource } from './server/database'
 import { global } from './server/global/config'
+import { ValidJwt } from './server/database/entities/ValidJwt'
 
 const app = new Koa()
 
@@ -17,7 +18,7 @@ handleDataSource.initialize()
     .catch((err) => {
         winston.error(`One of the connection is failed: ${err}`)
         throw err
-    })
+    });
 const { host, port } = global
 console.log(host, port)
 app.use(cors({

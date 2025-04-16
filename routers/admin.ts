@@ -1,12 +1,12 @@
 /**
- * admin routers
+ * @description admin routers
  */
 import Router from "@koa/router";
 import Admin from "@/middlewares/admin";
 import Token from "@/server/authentication/token";
 import HashCrypto from "@/server/authentication/crypto";
 import { handleDataSource } from "@/server/database";
-import { UserTable } from "@/server/database/entities/userTable";
+import { UserTable } from "@/server/database/entities/UserTable";
 import koaBody from "koa-body";
 
 const router = new Router();
@@ -19,27 +19,27 @@ router.post('/forceLogout', koaBody(), new Token(1).authLevel, new Admin().force
     ctx.body = {
         code: 0,
         data: {},
-        msg: 'Force logout success'
+        msg: 'admin.forceLogout'
     }
 })
 router.post('/registerUser', koaBody(), new Token(1).authLevel, new Admin().regesterUser, async (ctx) => {
     ctx.body = {
         code: 0,
-        msg: 'Register success',
+        msg: 'admin.regesterUser',
         data: {}
     }
 })
 router.post('/activeUser', koaBody(), new Token(1).authLevel, new Admin().activeUser, async (ctx) => {
     ctx.body = {
         code: 0,
-        msg: 'Active success',
+        msg: 'admin.activeUser',
         data: {}
     }
 })
 router.post('/disableUser', koaBody(), new Token(1).authLevel, new Admin().disableUser, async (ctx) => {
     ctx.body = {
         code: 0,
-        msg: 'Disable success',
+        msg: 'admin.disableUser',
         data: {}
     }
 })

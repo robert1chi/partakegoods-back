@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken"
 import winston from "@/winstonLogger"
 import { handleDataSource } from '../database'
-import { UserTable } from '../database/entities/userTable'
-import { ValidJwt } from '../database/entities/validJwt'
+import { UserTable } from '../database/entities/UserTable'
+import { ValidJwt } from '../database/entities/ValidJwt'
 import HashCrypto from './crypto'
 
 type AcceptMsg = {
@@ -126,7 +126,7 @@ class Token {
             if (this.level < 0) {
                 await next()
             } else if (userLevel !== null) {
-                if (userLevel.role <= this.level) {
+                if (userLevel.role <= this.level && userLevel.role > 0) {
                     await next()
                 } else {
                     ctx.body = {

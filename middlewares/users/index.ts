@@ -1,6 +1,6 @@
 import { handleDataSource } from "@/server/database";
-import { UserTable } from "@/server/database/entities/userTable";
-import { ValidJwt } from "@/server/database/entities/validJwt";
+import { UserTable } from "@/server/database/entities/UserTable";
+import { ValidJwt } from "@/server/database/entities/ValidJwt";
 import winston from "@/winstonLogger";
 import { global } from "@/server/global/config";
 import HashCrypto from "@/server/authentication/crypto";
